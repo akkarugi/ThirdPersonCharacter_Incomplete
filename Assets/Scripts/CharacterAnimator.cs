@@ -1,9 +1,16 @@
 
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Animator))]
 public class CharacterAnimator : MonoBehaviour
 {
+    protected Animator animator;
+
+    public bool ikActive = false;
+ 
+    public Transform lookObj = null;
+    float tiempo_cayendo = 0;
     public GroundDetector gd;
     public CharacterMover cm;
     public Camera cam;
@@ -30,6 +37,7 @@ public class CharacterAnimator : MonoBehaviour
     }
     void Update()
     {
+
         anim.SetFloat("Sideways", cm.velocity.x);
         anim.SetFloat("Upwards", cm.velocity.y);
         anim.SetFloat("Forward", cm.velocity.z);
@@ -39,6 +47,17 @@ public class CharacterAnimator : MonoBehaviour
         FixLookat();
 
         gunPivot.LookAt(lookat);
+
+        if (cm.velocity.y < 0)
+        {
+            tiempo_cayendo += Time.deltaTime;
+        }
+        else if (cm.velocity.z >= 0)
+        {
+            tiempo_cayendo = 1;
+        }
+
+        anim.speed = tiempo_cayendo;
     }
 
     private void FixLookat()
@@ -56,5 +75,51 @@ public class CharacterAnimator : MonoBehaviour
             forwardLookAt = Quaternion.AngleAxis(angle > 0 ? -maxAngle : maxAngle, axis) * transform.forward;
             lookat = cameraLookAt.transform.position + forwardLookAt * distance;
         }
+    }
+
+
+
+    void OnAnimatorIK()
+    {
+        if (anim)
+        {
+
+            if (ikActive)
+            {
+
+                if (lookObj != null)
+                {
+                    anim.SetLookAtWeight(1);
+                    anim.SetLookAtPosition(lookObj.position);
+                }
+
+                if (gunRightHand != null)
+                {
+                    anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+                    anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
+                    anim.SetIKPosition(AvatarIKGoal.RightHand, gunRightHand.position);
+                    anim.SetIKRotation(AvatarIKGoal.RightHand, gunRightHand.rotation);
+                }
+
+                if (gunLeftHand != null)
+                {
+                    anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
+                    anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
+                    anim.SetIKPosition(AvatarIKGoal.LeftHand, gunLeftHand.position);
+                    anim.SetIKRotation(AvatarIKGoal.LeftHand, gunLeftHand.rotation);
+                }
+
+            }
+
+            else
+            {
+                anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
+                anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
+                anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
+                anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0);
+                anim.SetLookAtWeight(0);
+            }
+        }
+
     }
 }

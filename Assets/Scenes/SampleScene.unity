@@ -14796,9 +14796,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d83b2a17e5f44ce4ab757b6a89bd0694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ikActive: 1
+  lookObj: {fileID: 866033694}
   gd: {fileID: 1089316527}
   cm: {fileID: 1089316528}
-  cam: {fileID: 0}
+  cam: {fileID: 963194227}
   rotationScale: 0.01
   gunPivot: {fileID: 866033694}
   gunRightHand: {fileID: 1255041503}
