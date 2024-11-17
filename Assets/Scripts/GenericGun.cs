@@ -23,6 +23,12 @@ public class GenericGun : MonoBehaviour
     public Vector3 knockbackRotation;
     Vector3 originalPosition;
     Quaternion originalRotation;
+
+    public float maxDistance = 4f;
+   
+    public Transform mirilla;
+    float currTimer = 0;
+    float contador = 0;
     private void Start()
     {
         originalPosition = transform.localPosition;
@@ -33,6 +39,56 @@ public class GenericGun : MonoBehaviour
     {
         transform.localPosition = Vector3.Lerp(transform.localPosition, originalPosition, positionRecover * Time.deltaTime);
         transform.localRotation = Quaternion.Lerp(transform.localRotation, originalRotation, rotationRecover * Time.deltaTime);
+
+        //RAYCAST
+        RaycastHit hit;
+
+        Debug.DrawRay(firePoint.position, firePoint.forward * maxDistance, Color.red);
+
+        if (Physics.Raycast(firePoint.position, firePoint.forward,out hit ,maxDistance))
+        {
+            mirilla.position = Camera.main.WorldToScreenPoint(hit.point);
+
+        }
+        if (automatic)
+        {
+            if (Input.GetButton("Fire1"))
+            {
+
+                currTimer += Time.deltaTime;
+                if (currTimer >= fireRate)
+                {
+                    if (clipCurrent > 0)
+                    {
+                        Fire();
+                        currTimer = 0;
+                        clipCurrent--;
+                    }
+                }
+            }
+        }
+        if (!automatic)
+        {
+            if (Input.GetButtonDown("Fire1"))
+            {
+                if (clipCurrent > 0)
+                {
+                    Fire();
+                   clipCurrent--;
+                }
+            }
+        }
+
+        if (clipCurrent <= 0)
+        {
+            contador += Time.deltaTime;
+            if (contador >= reloadTime)
+            {
+                clipCurrent = clipMax;
+                contador = 0;
+            }
+        }
+
     }
     public void Fire()
     {

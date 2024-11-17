@@ -87,11 +87,11 @@ public class CharacterAnimator : MonoBehaviour
             if (ikActive)
             {
 
-                if (lookObj != null)
-                {
+               
+                
                     anim.SetLookAtWeight(1);
                     anim.SetLookAtPosition(lookObj.position);
-                }
+                
 
                 if (gunRightHand != null)
                 {
