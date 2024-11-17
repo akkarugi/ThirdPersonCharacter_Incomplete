@@ -31,7 +31,7 @@ public class CameraOrbit : MonoBehaviour
         currentRotation.y -= mouseY;
 
 
-        currentRotation.y = Mathf.Clamp(currentRotation.y, -90f, 90f);
+        currentRotation.y = Mathf.Clamp(currentRotation.y, -45f, 45f);
 
 
         Quaternion rotation = Quaternion.Euler(currentRotation.y, currentRotation.x, 0);

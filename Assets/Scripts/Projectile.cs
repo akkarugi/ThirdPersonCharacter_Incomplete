@@ -13,6 +13,8 @@ public class Projectile : MonoBehaviour
     [HideInInspector]
     public Rigidbody rb;
 
+    public GameObject BulletHole;
+
     Vector3 lastPos;
     void Start()
     {
@@ -41,10 +43,15 @@ public class Projectile : MonoBehaviour
 
     void Hitted(RaycastHit hit)
     {
+        GameObject tmp= Instantiate(BulletHole, hit.point, Quaternion.LookRotation(hit.normal));
+        
         if (hit.rigidbody)
         {
             hit.rigidbody.AddForceAtPosition(rb.velocity * rb.mass * collisionForceMultiplier, this.transform.position);
+            tmp.transform.parent = hit.transform;
         }
         Destroy(gameObject);
     }
+
+
 }
